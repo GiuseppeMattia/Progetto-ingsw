@@ -68,17 +68,19 @@ export class RegisterComponent {
     this.api.registerUser(username, password).subscribe({
       next: (response) => {
         console.log('Registrazione effettuata con successo:', response);
+        alert("Registrazione avvenuta con successo!");
+        this.router.navigate(["/login"]);
       },
       error: (error) => {
         if (error.status === 409) { // L'utente esiste già
           alert("Errore: Username già scelto");
+          return;
         } else {
           console.error('Errore sconosciuto: ', error.status);
         }
       }
     });
 
-    alert("Registrazione avvenuta con successo!");
-    this.router.navigate(["/login"]);
+
   }
 }

@@ -22,11 +22,11 @@ export class ApiService {
       catchError((error: HttpErrorResponse) => {
         if(error.status === 0){ // Se il backend è spento, manda l'alert
           alert('Il servizio non è al momento raggiungibile. Riprova più tardi');
+          return of(null);
         }
         else{
           return throwError(() => ({ message: 'Messaggio di errore', status: error.status}));
         }
-        return of(null);
       })
     );
   }
@@ -46,5 +46,13 @@ export class ApiService {
         return of(null);
       })
     );
+  }
+
+  scegliTu(username: string){
+   return this.http.post(`${this.baseUrl}/sceglitu`, username);
+  }
+
+  completaTu(username: string){
+    return this.http.post(`${this.baseUrl}/completatu`, username);
   }
 }

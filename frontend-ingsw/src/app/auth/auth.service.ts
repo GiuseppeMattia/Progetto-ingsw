@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
+import {CookieService} from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  logged: boolean = false;
-  constructor() {}
+  constructor(private cookieService: CookieService) {}
 
-  isLogged(){
-    return this.logged;
+  isLogged(): boolean {
+    return this.cookieService.get('logged') === "true";
   }
 
-  setLogged(b: boolean){
-    this.logged = b;
+  setLogged(name: boolean){
+    this.cookieService.set('logged', name.toString());
   }
 }
+
+

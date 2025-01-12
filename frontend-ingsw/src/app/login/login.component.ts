@@ -3,6 +3,7 @@ import {Router, RouterLink, RouterModule, RouterOutlet} from '@angular/router';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ApiService} from '../api.service'
 import {AuthService} from '../auth/auth.service';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +19,8 @@ import {AuthService} from '../auth/auth.service';
 export class LoginComponent{
   constructor(private router: Router,
               private api: ApiService,
-              private auth: AuthService) {}
+              private auth: AuthService,
+              private cookieService: CookieService) {}
 
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),
@@ -57,7 +59,10 @@ export class LoginComponent{
     // Invia i vari dati al backend
     this.api.sendUser(username, password).subscribe({
       next: (response) => {
-        console.log('Login effettuato con successo:', response);
+        this.auth.setLogged(true);
+        this.cookieService.set("username", username);
+        this.router.navigate(["/home"]);
+        console.log('Login effettuato con successo');
       },
       error: (error) => {
         if (error.status === 401) { // La password è sbagliata
@@ -69,9 +74,5 @@ export class LoginComponent{
         }
       }
     });
-
-    this.auth.setLogged(true);
-
-    this.router.navigate(["/home"]);
   }
 }
