@@ -24,4 +24,14 @@ public class GiocatoreService implements IGiocatoreService{
     public Giocatore findPlayerByUsername(String username) {
         return giocatoreDAO.getGiocatoreByUsername(username);
     }
+
+    @Override
+    public int getScegliTuRecord(String username) {
+        return giocatoreDAO.getScegliTuRecord(username);
+    }
+
+    @Override
+    public int getCompletaTuRecord(String username) {
+        return giocatoreDAO.getCompletaTuRecord(username);
+    }
 }

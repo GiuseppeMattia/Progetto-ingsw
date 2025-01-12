@@ -48,4 +48,40 @@ public class GiocatoreDAOJDBC implements GiocatoreDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public int getScegliTuRecord(String nome) {
+        String query = "SELECT recordsceglitu FROM giocatore WHERE username = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, nome);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("recordsceglitu");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int getCompletaTuRecord(String nome) {
+        String query = "SELECT recordcompletatu FROM giocatore WHERE username = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, nome);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("recordcompletatu");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
 }

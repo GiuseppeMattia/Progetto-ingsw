@@ -1,5 +1,6 @@
 package org.example.backendingsw.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.backendingsw.model.Giocatore;
 import org.example.backendingsw.service.IGiocatoreService;
 import org.springframework.http.ResponseEntity;
@@ -25,30 +26,25 @@ public class Controller {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/data")
-    public ResponseEntity<String> receiveData(@RequestBody String data) {
-        System.out.println(data);
-        return ResponseEntity.ok("Data received: " + data);
-    }
-
     @PostMapping("/validate")
     public ResponseEntity<Map<String, String>> receiveUsernameAndPassword(@RequestBody Giocatore giocatore) {
-        System.out.println("Username Login: " + giocatore.getUsername());
-        System.out.println("Password Login: " + giocatore.getPassword());
 
         Map<String, String> response = new HashMap<>();
 
         Giocatore g = iGiocatoreService.findPlayerByUsername(giocatore.getUsername());
         if(g == null) {
+            System.out.println("Utente con nome " + giocatore.getUsername() + " non trovato");
             response.put("message", "Utente non trovato");
             return ResponseEntity.status(404).body(response);
         }
         else{
             if(g.getPassword().equals(giocatore.getPassword())) {
+                System.out.println("Utente " + g.getUsername() + " loggato");
                 response.put("message", "Utente loggato correttamente");
                 return ResponseEntity.ok(response);
             }
             else{
+                System.out.println("Inserita password errata per l'utente " + giocatore.getUsername());
                 response.put("message", "Password errata");
                 return ResponseEntity.status(401).body(response);
             }
@@ -58,21 +54,38 @@ public class Controller {
 
     @PostMapping("/create")
     public ResponseEntity<Map<String, String>> createUser(@RequestBody Giocatore giocatore) {
-        System.out.println("Username Login: " + giocatore.getUsername());
-        System.out.println("Password Login: " + giocatore.getPassword());
-
         Map<String, String> response = new HashMap<>();
 
         Giocatore g = iGiocatoreService.findPlayerByUsername(giocatore.getUsername());
 
         if(g != null){
+            System.out.println("Utente con nome " + giocatore.getUsername() + " già esistente");
             response.put("message", "Utente già esistente");
             return ResponseEntity.status(409).body(response);
         }
-
         iGiocatoreService.addPlayer(giocatore.getUsername(), giocatore.getPassword());
+        System.out.println("Utente " + giocatore.getUsername() + " aggiunto");
 
         response.put("message", "Utente aggiunto correttamente");
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/sceglitu")
+    public ResponseEntity<String> sendScegliTu(@RequestBody String username) {
+        int record = iGiocatoreService.getScegliTuRecord(username);
+
+        System.out.println("Record dell'utente " + username + " in modalità Scegli Tu: " + record);
+
+        return ResponseEntity.ok(String.valueOf(record));
+    }
+
+    @PostMapping("/completatu")
+    public ResponseEntity<String> sendCompletaTu(@RequestBody String username) {
+        int record = iGiocatoreService.getCompletaTuRecord(username);
+
+        System.out.println("Record dell'utente " + username + " in modalità Completa Tu: " + record);
+
+        return ResponseEntity.ok(String.valueOf(record));
+    }
+
 }
