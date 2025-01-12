@@ -5,4 +5,4 @@ Creato da:
 Isabella Mariano Vincenzo
 Mezzotero Giuseppe Mattia
 
-# ATTENZIONE: per connettere il backend al database, cambiare la password nel file DBManager.java
+\textbf{ATTENZIONE}: per connettere il backend al database, cambiare la password nel file DBManager.java
