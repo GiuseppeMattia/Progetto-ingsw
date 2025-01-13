@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, Observable, of, throwError} from 'rxjs';
+import {catchError, map, Observable, of, throwError} from 'rxjs';
+import {Domanda} from './models/domanda.model';
 
 @Injectable({
   providedIn: 'root'
@@ -54,5 +55,19 @@ export class ApiService {
 
   completaTu(username: string){
     return this.http.post(`${this.baseUrl}/completatu`, username);
+  }
+
+  questions(): Observable<Domanda[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/questions`).pipe(
+      map((data: any[]) =>
+        data.map(item => new Domanda(
+          item.id,
+          item.descrizione,
+          item.modalitasceglitu,
+          item.rispostacorretta,
+          item.audio
+        ))
+      )
+    );
   }
 }

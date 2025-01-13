@@ -22,6 +22,14 @@ export class HomeComponent {
     console.log('Logout effettuato con successo');
   }
 
+  scegliTu(){
+    this.router.navigate(["/regolesceglitu"]);
+  }
+
+  completaTu(){
+    this.router.navigate(["/regolecompletatu"]);
+  }
+
   record(){
     this.router.navigate(["/record"]);
   }
