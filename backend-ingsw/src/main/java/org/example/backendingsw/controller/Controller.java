@@ -1,12 +1,16 @@
 package org.example.backendingsw.controller;
 
-import jakarta.servlet.http.HttpSession;
+import org.example.backendingsw.model.Domanda;
 import org.example.backendingsw.model.Giocatore;
+import org.example.backendingsw.model.Risposta;
+import org.example.backendingsw.service.IDomandaService;
 import org.example.backendingsw.service.IGiocatoreService;
+import org.example.backendingsw.service.IRispostaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,9 +18,13 @@ import java.util.Map;
 public class Controller {
 
     private IGiocatoreService iGiocatoreService;
+    private IDomandaService iDomandaService;
+    private IRispostaService iRispostaService;
 
-    public Controller(IGiocatoreService iGiocatoreService) {
+    public Controller(IGiocatoreService iGiocatoreService, IDomandaService iDomandaService, IRispostaService iRispostaService) {
         this.iGiocatoreService = iGiocatoreService;
+        this.iDomandaService = iDomandaService;
+        this.iRispostaService = iRispostaService;
     }
 
     @GetMapping("/greet")
@@ -88,4 +96,41 @@ public class Controller {
         return ResponseEntity.ok(String.valueOf(record));
     }
 
+    @GetMapping("/questions")
+    public ResponseEntity<List<Domanda>> getQuestions() {
+        List<Domanda> domande = iDomandaService.getDomande();
+
+        if(domande == null){
+            System.out.println("Il database non ha domande");
+            return ResponseEntity.status(404).body(domande);
+        }
+        return ResponseEntity.ok(domande);
+    }
+
+    @PostMapping("/questionsbymodality")
+    public ResponseEntity<List<Domanda>> getQuestionsByModality(@RequestBody boolean modality){
+        List<Domanda> domande = iDomandaService.getDomandeByModality(modality);
+
+        if(domande == null){
+            String modalita = (modality) ? "Scegli Tu!" : "Completa Tu!";
+
+            System.out.println("Nessuna domanda della modalià" + modalita);
+
+            return ResponseEntity.status(404).body(domande);
+        }
+
+        return ResponseEntity.ok(domande);
+    }
+
+    @GetMapping("/answers")
+    public ResponseEntity<List<Risposta>> getAnswers() {
+        List<Risposta> risposte = iRispostaService.getRisposte();
+
+        if(risposte == null){
+            System.out.println("Il database non ha risposte");
+            return ResponseEntity.status(404).body(null);
+        }
+
+        return ResponseEntity.ok(risposte);
+    }
 }

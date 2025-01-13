@@ -2,7 +2,6 @@ package org.example.backendingsw.service;
 
 import org.example.backendingsw.model.Giocatore;
 import org.example.backendingsw.persistence.dao.GiocatoreDAO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
