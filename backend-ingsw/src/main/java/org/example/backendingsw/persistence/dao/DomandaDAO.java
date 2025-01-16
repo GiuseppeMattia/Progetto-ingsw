@@ -4,6 +4,7 @@ import org.example.backendingsw.model.Domanda;
 
 import java.util.List;
 
+// Interfaccia DAO per l'oggetto Domanda
 public interface DomandaDAO {
     public List<Domanda> getAll();
 

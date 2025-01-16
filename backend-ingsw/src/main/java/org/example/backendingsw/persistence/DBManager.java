@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+// Classe singleton che connette al database
 public class DBManager {
 
     private static DBManager instance = null;
@@ -25,6 +26,8 @@ public class DBManager {
     public Connection getConnection() {
         if(this.connection == null){
             try{
+                // ATTENZIONE: Cambiare i parametri in accordo con il proprio url, il proprio username e la propria password per
+                // accedere al database Postgres
                 connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/ingsw", "postgres", "rullo");
             }
             catch (SQLException e){

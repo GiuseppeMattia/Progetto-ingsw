@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+// DAO per trasformare le tabelle "giocatore" del database in oggetti Giocatore
 @Component
 public class GiocatoreDAOJDBC implements GiocatoreDAO {
 
@@ -83,5 +84,33 @@ public class GiocatoreDAOJDBC implements GiocatoreDAO {
         return 0;
     }
 
+    @Override
+    public void updateScegliTuRecord(String username, int record) {
+        String query = "UPDATE giocatore SET recordsceglitu = ? WHERE username = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, record);
+            statement.setString(2, username);
+            statement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateCompletaTuRecord(String username, int record) {
+        String query = "UPDATE giocatore SET recordcompletatu = ? WHERE username = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, record);
+            statement.setString(2, username);
+            statement.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
+

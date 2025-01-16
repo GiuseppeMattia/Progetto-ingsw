@@ -2,10 +2,11 @@ package org.example.backendingsw.controller;
 
 import org.example.backendingsw.model.Domanda;
 import org.example.backendingsw.model.Giocatore;
+import org.example.backendingsw.model.GiocatoreRecord;
 import org.example.backendingsw.model.Risposta;
-import org.example.backendingsw.service.IDomandaService;
-import org.example.backendingsw.service.IGiocatoreService;
-import org.example.backendingsw.service.IRispostaService;
+import org.example.backendingsw.service.interfaces.IDomandaService;
+import org.example.backendingsw.service.interfaces.IGiocatoreService;
+import org.example.backendingsw.service.interfaces.IRispostaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Controller usato per le chiamate API da parte / per il frontend
 @RestController
 @RequestMapping("/api")
 public class Controller {
@@ -31,6 +33,7 @@ public class Controller {
     public ResponseEntity<Map<String, String>> greet() {
         Map<String, String> response = new HashMap<>();
         response.put("message", "Hello from the backend!");
+        //  String response = "Hello from the backend!";
         return ResponseEntity.ok(response);
     }
 
@@ -132,5 +135,56 @@ public class Controller {
         }
 
         return ResponseEntity.ok(risposte);
+    }
+
+    @PostMapping("/answersbymodality")
+    public ResponseEntity<List<Risposta>> getAnswersByModality(@RequestBody boolean modality) {
+        List<Risposta> risposte = iRispostaService.getRisposteByModality(modality);
+
+        if(risposte == null){
+            String modalita = (modality) ? "Scegli Tu!" : "Completa Tu!";
+
+            System.out.println("Nessuna risposta della modalià" + modalita);
+
+            return ResponseEntity.status(404).body(risposte);
+        }
+
+        return ResponseEntity.ok(risposte);
+    }
+
+    @PostMapping("/answerbyid")
+    public ResponseEntity<Risposta> getAnswersById(@RequestBody int id){
+        Risposta risposta = iRispostaService.getRispostaById(id);
+
+        if(risposta == null){
+            System.out.println("Il database non ha risposte per l'id " + id);
+            return ResponseEntity.status(404).body(null);
+        }
+
+        System.out.println("Sto mandando la risposta con id " + id);
+        return ResponseEntity.ok(risposta);
+    }
+
+    @PostMapping("/updatesceglitu")
+    public ResponseEntity<Map<String, String>> updateScegliTu(@RequestBody GiocatoreRecord giocatoreRecord) {
+        Map<String, String> response = new HashMap<>();
+
+        iGiocatoreService.updateScegliTuRecord(giocatoreRecord.getUsername(), giocatoreRecord.getRecord());
+        System.out.println("Record dell'utente " + giocatoreRecord.getUsername() + " in modalità Scegli Tu aggiornato correttamente");
+
+        response.put("message", "Record Scegli Tu aggiornato");
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PostMapping("/updatecompletatu")
+    public ResponseEntity<Map<String, String>> updateCompletaTu(@RequestBody GiocatoreRecord giocatoreRecord) {
+        Map<String, String> response = new HashMap<>();
+
+        iGiocatoreService.updateCompletaTuRecord(giocatoreRecord.getUsername(), giocatoreRecord.getRecord());
+        System.out.println("Record dell'utente " + giocatoreRecord.getUsername() + " in modalità Completa Tu aggiornato correttamente");
+
+        response.put("message", "Record Completa Tu aggiornato");
+        return ResponseEntity.ok(response);
     }
 }

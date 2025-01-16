@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+// DAO per trasformare le tabelle "domanda" del database in oggetti Domanda
 @Component
 public class DomandaDAOJDBC implements DomandaDAO {
 
