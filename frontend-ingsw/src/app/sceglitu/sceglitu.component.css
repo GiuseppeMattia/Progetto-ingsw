@@ -1,0 +1,106 @@
+.domande {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  text-align: center;
+  min-width: 300px;
+}
+
+p {
+  font-family: 'Arial', sans-serif;
+}
+
+label{
+  font-family: 'Arial', sans-serif;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  font-family: 'Arial', sans-serif;
+}
+
+
+audio {
+  width: 100%;
+  max-width: 600px;
+  margin: 10px auto;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f0f0f0;
+  padding: 10px;
+  transition: box-shadow 0.3s ease;
+}
+
+
+audio:hover {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+audio::-webkit-media-controls {
+  border-radius: 8px;
+}
+
+audio::-webkit-media-controls-play-button {
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+audio::-webkit-media-controls-play-button:hover {
+  background-color: #555555;
+  transform: scale(1.1);
+}
+
+
+audio::-webkit-media-controls-volume-slider {
+  border-radius: 8px;
+}
+
+
+audio::-webkit-media-controls-timeline {
+  border-radius: 8px;
+}
+
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+  color: #333333;
+}
+
+button{
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.avanti:hover{
+  background-color: #0056b3;
+}
+
+.home-button{
+  position: fixed;  /* Posizione fissa rispetto alla finestra del browser */
+  top: 20px;        /* Distanza dall'alto */
+  right: 20px;      /* Distanza da destra */
+  background-color: red;
+}
+
+.home-button:hover{
+  background-color: darkred;
+}

@@ -1,6 +1,6 @@
 import {Component, HostListener} from '@angular/core';
 import {Router, RouterLink, RouterOutlet} from '@angular/router';
-import {ApiService} from '../api.service';
+import {ApiService} from '../service/api.service';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 
 @Component({

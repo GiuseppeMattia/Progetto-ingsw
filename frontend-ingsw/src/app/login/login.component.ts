@@ -1,7 +1,7 @@
-import {Component, HostListener} from '@angular/core';
-import {Router, RouterLink, RouterModule, RouterOutlet} from '@angular/router';
+import {Component, HostListener, OnInit} from '@angular/core';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ApiService} from '../api.service'
+import {ApiService} from '../service/api.service'
 import {AuthService} from '../auth/auth.service';
 import {CookieService} from 'ngx-cookie-service';
 
@@ -16,11 +16,18 @@ import {CookieService} from 'ngx-cookie-service';
   styleUrl: './login.component.css'
 })
 
-export class LoginComponent{
+export class LoginComponent implements OnInit{
   constructor(private router: Router,
               private api: ApiService,
               private auth: AuthService,
               private cookieService: CookieService) {}
+
+  // In caso qualcuno sia già loggato e decida di andare sul path ""
+  ngOnInit() {
+    if(this.cookieService.get("logged") === "true"){
+      this.router.navigate(["/home"]);
+    }
+  }
 
   loginForm = new FormGroup({
     username: new FormControl('', Validators.required),

@@ -4,7 +4,7 @@ import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {HttpClient} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
-import {ApiService} from './api.service';
+import {ApiService} from './service/api.service';
 
 @Component({
   selector: 'app-root',

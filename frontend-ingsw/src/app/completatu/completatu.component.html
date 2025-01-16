@@ -1,0 +1,25 @@
+<div class="domande" *ngIf="currentQuestion">
+  <h2>Domanda {{ currentIndex + 1 }} di {{ numberOfQuestions }}</h2>
+
+  <div class="domanda">
+    <p>{{ currentQuestion.descrizione }}</p>
+  </div>
+
+  <div>
+    <p>Tempo rimanente: {{ remainingTime }} secondi</p>
+  </div>
+
+  <form (ngSubmit)="next()">
+      <label class="input-label">
+        <input
+          type="text"
+          name="risposta"
+          [(ngModel)]="insertedAnswer"
+        />
+      </label>
+    <button class="avanti" type="submit" (reset)="insertedAnswer">{{button}}</button>
+  </form>
+
+</div>
+
+<button class="home-button" type="submit" (click)="home()" >Ritorna al menù</button>

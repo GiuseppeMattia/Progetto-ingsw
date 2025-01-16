@@ -1,7 +1,30 @@
-<div *ngIf="audioUrl">
-  <audio controls>
-    <source [src]="audioUrl" type="audio/mp3" />
-    Il tuo browser non supporta il tag audio.
-  </audio>
+<div class="domande" *ngIf="currentQuestion">
+  <h2>Domanda {{ currentIndex + 1 }} di {{ numberOfQuestions }}</h2>
+
+  <div class="audio" *ngIf="audioUrl[currentIndex]">
+    <audio *ngIf="currentAudio" [src]="currentAudio" autoplay controls>
+      Il tuo browser non supporta il tag audio.
+    </audio>
+  </div>
+
+  <div>
+    <p>Tempo rimanente: {{ remainingTime }} secondi</p>
+  </div>
+
+  <form (ngSubmit)="next()">
+    <div *ngFor="let risposta of answersToShow">
+      <label>
+        <input
+          type="radio"
+          name="risposta"
+          [value]="risposta.descrizione"
+          (change)="selectAnswer(risposta)"
+          [checked]="risposta === selectedAnswer"
+        /> {{risposta.descrizione}}
+      </label>
+    </div>
+    <button class="avanti" type="submit" >{{button}}</button>
+  </form>
 </div>
 
+<button class="home-button" type="submit" (click)="home()" >Ritorna al menù</button>

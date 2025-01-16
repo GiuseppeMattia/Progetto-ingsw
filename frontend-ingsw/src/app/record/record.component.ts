@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ApiService} from '../api.service';
+import {ApiService} from '../service/api.service';
 import {CookieService} from 'ngx-cookie-service';
 import {Router} from '@angular/router';
 

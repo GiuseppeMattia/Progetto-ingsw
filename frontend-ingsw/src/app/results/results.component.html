@@ -1,0 +1,12 @@
+<div class="results-container">
+  <p>Risultati: {{points}}</p>
+  <p>Hai risposto correttamente alle seguenti domande: {{correctAnswers}}</p>
+  <button type="submit" class="home-button" (click)="home()">Torna al menù</button>
+  <button type="submit" class="play-button" (click)="play()">Rigioca</button>
+
+  <div class="record" *ngIf="updated">
+    <p>Nuovo Record!</p>
+  </div>
+
+</div>
+

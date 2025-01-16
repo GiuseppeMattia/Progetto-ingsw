@@ -15,6 +15,6 @@ export class RegolecompletatuComponent {
   }
 
   play(){
-
+    this.router.navigate(["/completatu"]);
   }
 }

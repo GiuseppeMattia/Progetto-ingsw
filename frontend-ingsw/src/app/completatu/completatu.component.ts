@@ -1,36 +1,34 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ApiService} from '../service/api.service';
 import {Domanda} from '../models/domanda.model';
-import {CommonModule} from '@angular/common';
 import {Risposta} from '../models/risposta.model';
-import {forkJoin} from 'rxjs';
-import {FormsModule} from '@angular/forms';
+import {ApiService} from '../service/api.service';
 import {Router} from '@angular/router';
-import {ResultsService} from '../service/results.service';
 import {CookieService} from 'ngx-cookie-service';
-
+import {forkJoin} from 'rxjs';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NgIf} from '@angular/common';
 
 @Component({
-  selector: 'app-sceglitu',
-  imports: [CommonModule, FormsModule],
-  templateUrl: './sceglitu.component.html',
-  styleUrl: './sceglitu.component.css'
+  selector: 'app-completatu',
+  imports: [
+    FormsModule,
+    NgIf,
+    ReactiveFormsModule
+  ],
+  templateUrl: './completatu.component.html',
+  styleUrl: './completatu.component.css'
 })
 
-export class SceglituComponent implements OnInit, OnDestroy{
+export class CompletatuComponent implements OnInit, OnDestroy{
 
   protected questions: Domanda[];     // Domande da mostrare
-  protected answers: Risposta[];      // Tutte le risposte
-  protected audioUrl : any;           // Array che salva le tracce audio delle domande
 
   protected currentIndex: number;       // Indice che tiene traccia della domanda corrente
   protected readonly numberOfQuestions: number = 10; // Numero di domande (costante)
   protected currentQuestion: Domanda | null;  // Domanda corrente
-  protected selectedAnswer: Risposta | null;  // Risposta selezionata
-  protected correctAnswers:  Risposta[];      // Risposte corrette
-  protected answersToShow: Risposta[];        // Risposte da mostrare
+  protected insertedAnswer: String | null;  // Risposta inserita
+  protected correctAnswers: Risposta[];      // Risposte corrette
   protected currentPoints: number;            // Punteggio attuale
-  protected currentAudio: any;                // Audio al momento in riproduzione
   protected button: string;                   // Scritta del bottone
   protected remainingTime: number;            // Tempo rimanente
 
@@ -39,14 +37,11 @@ export class SceglituComponent implements OnInit, OnDestroy{
 
   constructor(private api: ApiService, private router: Router, private cookieService: CookieService){
     this.questions = [];
-    this.audioUrl = [];
-    this.answers = [];
 
     this.currentIndex = 0;
     this.currentQuestion = null;
-    this.selectedAnswer = null;
+    this.insertedAnswer = "";
     this.correctAnswers = [];
-    this.answersToShow = [];
     this.currentPoints = 0;
 
     this.button = "Avanti";
@@ -70,51 +65,19 @@ export class SceglituComponent implements OnInit, OnDestroy{
     return result;
   }
 
-  // Funzione che mischia l'array temporaneo di risposte
-  shuffleArray(array: Risposta[]): Risposta[] {
-    const arrayCopy = [...array]; // Copia l'array
-    for (let i = arrayCopy.length - 1; i > 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      // Scambia l'elemento corrente con uno casuale
-      [arrayCopy[i], arrayCopy[randomIndex]] = [arrayCopy[randomIndex], arrayCopy[i]];
-    }
-    return arrayCopy;
-  }
-
-
-  fromByteToAudio(byte: string){
-    let byteCharacters = atob(byte); // Trasforma da Base64 ad ASCII
-    let byteArray = new Uint8Array(byteCharacters.length);
-
-    // Memcpy alla crapigna perché Typescript non lo ha
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteArray[i] = byteCharacters.charCodeAt(i);
-    }
-
-    // Blob: dato usato per rappresentare immagini, video, audio, ecc.
-    return new Blob([byteArray], { type: 'audio/mp3' });
-  }
 
   ngOnInit() {
-    let record = this.api.scegliTu(this.cookieService.get("username"));
+    let record = this.api.completaTu(this.cookieService.get("username"));
     record.subscribe(recordone => {
       this.cookieService.set("record", recordone.toString());
     })
 
     // Prende le domande dal backend
-    let d  = this.api.questionsByModality(true);
+    let d  = this.api.questionsByModality(false);
 
     d.subscribe(questions => {
       // Imposta le domande da fare
       this.questions = this.getRandomElements(questions, this.numberOfQuestions);
-
-      // Crea gli audio da mostrare
-      for (let i: number = 0; i < this.numberOfQuestions; i++) {
-        this.audioUrl.push(URL.createObjectURL(this.fromByteToAudio(this.questions[i].audio)));
-      }
-
-      // Chiede TUTTE le risposte al backend
-      let answers = this.api.answersByModality(true);
 
       // Prende le risposte corrette
       let correctAnswers = this.questions.map((question) =>
@@ -122,9 +85,7 @@ export class SceglituComponent implements OnInit, OnDestroy{
       );
 
       // Aspetta che finiscano tutte le chiamate asincrone
-      forkJoin([answers, ...correctAnswers]).subscribe(([risposte, ...corrette]) => {
-        // Assegna tutte le risposte
-        this.answers = risposte;
+      forkJoin([...correctAnswers]).subscribe((corrette) => {
         // Assegna le risposte corrette
         this.correctAnswers = corrette;
 
@@ -150,25 +111,6 @@ export class SceglituComponent implements OnInit, OnDestroy{
     }
   }
 
-  // Carica le risposte
-  loadAnswers(){
-    // Carica 4 risposte casuali
-    this.answersToShow = this.getRandomElements(this.answers, 4);
-
-    // Controlla che la risposta giusta non ci sia già
-    for(let i: number = 0; i < 4; i++){
-      if(this.correctAnswers[this.currentIndex].id === this.answersToShow[i].id){
-          return;
-      }
-    }
-
-    // L'indice non c'è, quindi viene caricato
-    this.answersToShow[0] = this.correctAnswers[this.currentIndex];
-
-    // Shuffle dell'array per disordinare gli elementi
-    this.answersToShow = this.shuffleArray(this.answersToShow);
-  }
-
   // Mostra la domanda corrente
   showQuestion(){
 
@@ -176,47 +118,40 @@ export class SceglituComponent implements OnInit, OnDestroy{
     // console.log("La traccia audio al momento è: " + this.audioUrl[this.currentIndex] +
     //             " e corrisponde alla traccia: " + this.questions[this.currentIndex].descrizione);
 
-    this.loadAnswers()
     this.currentQuestion = this.questions[this.currentIndex];
-    this.selectedAnswer = null;
-    this.currentAudio = this.audioUrl[this.currentIndex];
     this.startCountdown();
-  }
-
-  selectAnswer(selected: Risposta){
-    this.selectedAnswer = selected;
   }
 
   next(){
     // Resetta il timer
     this.remainingTime = 15;
 
-    // Se ha selezionato la risposta ed è giusta, aumenta il punteggio corrente
-    if(this.selectedAnswer != null){
-      if(this.selectedAnswer.id === this.correctAnswers[this.currentIndex].id){
+    // Se la risposta è giusta, aumenta il punteggio corrente
+    if((this.insertedAnswer)?.toLowerCase() === (this.correctAnswers[this.currentIndex].descrizione).toLowerCase()){
         this.currentPoints++;
         this.answeredCorrectly.push(this.currentIndex + 1);
-      }
     }
 
-    // Avanti con le domande e la traccia audio
+    // Avanti con le domande
     this.currentIndex++;
 
     // Se non è all'ultima domanda, mostra la prossima domanda
     if(this.currentIndex < this.numberOfQuestions - 1){
+      this.insertedAnswer = "";
       this.showQuestion();
     }
     else if(this.currentIndex === this.numberOfQuestions - 1){
-        // Cambia il bottone se è all'ultima domanda
-        this.button = "Termina";
-        this.showQuestion();
+      // Cambia il bottone se è all'ultima domanda
+      this.insertedAnswer = "";
+      this.button = "Termina";
+      this.showQuestion();
     } else{
-        // Se è andato oltre l'indice delle domande, porta alla schermata dei risultati
-        this.cookieService.set("points", this.currentPoints.toString())
-        this.cookieService.set("modality", "sceglitu");
-        this.cookieService.set("correct", JSON.stringify(this.answeredCorrectly));
-        this.router.navigate(["/points"]);
-      }
+      // Se è andato oltre l'indice delle domande, porta alla schermata dei risultati
+      this.cookieService.set("points", this.currentPoints.toString())
+      this.cookieService.set("modality", "completatu");
+      this.cookieService.set("correct", JSON.stringify(this.answeredCorrectly));
+      this.router.navigate(["/points"]);
+    }
   }
 
   // Inizia il timer con, opzionalmente, un punteggio già dato (in caso si sia messo in pausa il timer)

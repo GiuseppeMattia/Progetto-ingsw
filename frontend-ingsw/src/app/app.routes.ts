@@ -8,6 +8,8 @@ import {RecordComponent} from './record/record.component';
 import {RegolesceglituComponent} from './regolesceglitu/regolesceglitu.component';
 import {RegolecompletatuComponent} from './regolecompletatu/regolecompletatu.component';
 import {SceglituComponent} from './sceglitu/sceglitu.component';
+import {ResultsComponent} from './results/results.component';
+import {CompletatuComponent} from './completatu/completatu.component';
 
 export const routes: Routes = [{path:"", redirectTo:"/login", pathMatch:"full"},
                                {path:'register', component: RegisterComponent},
@@ -16,7 +18,11 @@ export const routes: Routes = [{path:"", redirectTo:"/login", pathMatch:"full"},
                                {path:"record", component: RecordComponent, canActivate:[authGuard]},
                                {path:"regolesceglitu", component: RegolesceglituComponent, canActivate:[authGuard]},
                                {path:"regolecompletatu", component: RegolecompletatuComponent, canActivate:[authGuard]},
-                               {path:"sceglitu", component: SceglituComponent, canActivate:[authGuard]}];
+                               {path:"sceglitu", component: SceglituComponent, canActivate:[authGuard]},
+                               {path:"completatu", component: CompletatuComponent,canActivate:[authGuard]},
+                               {path:"points", component: ResultsComponent, canActivate:[authGuard]},
+                               {path:"**", redirectTo:"/home", pathMatch:"full"}];
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports:[RouterModule]
