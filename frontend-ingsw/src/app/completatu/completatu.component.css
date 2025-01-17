@@ -1,18 +1,3 @@
-.domande{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-
-  text-align: center;
-  min-width: 300px;
-}
-
 .input-label {
   font-size: 1.2rem;
   color: #333;
@@ -28,43 +13,9 @@ input[type=text] {
   box-sizing: border-box;
 }
 
-p {
-  font-family: 'Arial', sans-serif;
-}
-
-label{
-  font-family: 'Arial', sans-serif;
-}
-
-h2 {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
-  font-family: 'Arial', sans-serif;
-}
-
-button{
-  padding: 10px 20px;
-  font-size: 16px;
-  background-color: #007BFF;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.avanti:hover{
-  background-color: #0056b3;
-}
-
 .home-button{
   position: fixed;  /* Posizione fissa rispetto alla finestra del browser */
   top: 20px;        /* Distanza dall'alto */
   right: 20px;      /* Distanza da destra */
-  background-color: red;
 }
 
-.home-button:hover{
-  background-color: darkred;
-}

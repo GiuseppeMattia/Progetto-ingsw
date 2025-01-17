@@ -65,18 +65,21 @@ export class LoginComponent implements OnInit{
 
     // Invia i vari dati al backend
     this.api.sendUser(username, password).subscribe({
-      next: (response) => {
+      next: () => {
         this.auth.setLogged(true);
         this.cookieService.set("username", username);
         this.router.navigate(["/home"]);
-        console.log('Login effettuato con successo');
+        //console.log('Login effettuato con successo');
       },
       error: (error) => {
         if (error.status === 401) { // La password è sbagliata
           alert("Errore: Password errata");
         } else if (error.status === 404) { // L'utente non esiste
           alert("Errore: Utente non trovato");
+        } else if (error.status === 0){
+          alert('Il servizio non è al momento raggiungibile. Riprova più tardi');
         } else {
+          alert("C'è stato un errore nel login")
           console.error('Errore sconosciuto: ', error.status);
         }
       }

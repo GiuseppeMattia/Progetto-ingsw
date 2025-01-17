@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {catchError, map, Observable, of, tap, throwError} from 'rxjs';
+import {catchError, map, Observable, of, throwError} from 'rxjs';
 import {Domanda} from '../models/domanda.model';
 import {Risposta} from '../models/risposta.model';
 import {Router} from '@angular/router';
@@ -37,23 +37,22 @@ export class ApiService {
     }
     return of([]);
   }
-
+/*
   // Chiamata al backend di prova per vedere che il backend funziona
   getGreet(): Observable<string> {
     return this.http.get<string>(`${this.baseUrl}/greet`);
   }
-
+*/
   // Invia al backend i dati da verificare
   sendUser(username: any, password: any): Observable<any>{
     let body = {username, password};
     return this.http.post(`${this.baseUrl}/validate`, body).pipe(
       catchError((error: HttpErrorResponse) => {
         if(error.status === 0){ // Se il backend è spento, manda l'alert
-          alert('Il servizio non è al momento raggiungibile. Riprova più tardi');
-          return of(null);
+            return throwError(() => ({ message: 'Backend spento', status: error.status}));
         }
         else{
-          return throwError(() => ({ message: 'Messaggio di errore', status: error.status}));
+          return throwError(() => ({ message: 'Errore sconosciuto', status: error.status}));
         }
       })
     );
@@ -66,7 +65,7 @@ export class ApiService {
     return this.http.post(`${this.baseUrl}/create`, body).pipe(
       catchError((error: HttpErrorResponse) => {
         if(error.status === 0){ // Se il backend è spento, manda l'alert
-          alert('Il servizio non è al momento raggiungibile. Riprova più tardi');
+          return throwError(() => ({ message: 'Backend spento', status: error.status}));
         }
         else{
           return throwError(() => ({ message: 'Si è verificato un errore sconosciuto', status: error.status}));
@@ -104,6 +103,7 @@ export class ApiService {
   }
 
   // Fornisce tutte le domande
+    /*
   questions(): Observable<Domanda[]> {
     return this.http.get<any[]>(`${this.baseUrl}/questions`).pipe(
       map((data: any[]) =>
@@ -120,7 +120,7 @@ export class ApiService {
       })
     );
   }
-
+*/
   // Fornisce domande in base alla modalità (true: "Scegli Tu!", false: "Completa Tu!")
   questionsByModality(modality: boolean): Observable<Domanda[]>{
     return this.http.post<any[]>(`${this.baseUrl}/questionsbymodality`, modality).pipe(
@@ -140,6 +140,7 @@ export class ApiService {
   }
 
   // Fornisce tutte le risposte
+    /*
   answers(): Observable<Risposta[]>{
     return this.http.get<any[]>(`${this.baseUrl}/answers`).pipe(
       map((data: any[]) =>
@@ -151,7 +152,7 @@ export class ApiService {
       )
     );
   }
-
+*/
   // Fornisce risposte in base alla modalità (true: "Scegli Tu!", false: "Completa Tu!")
   answersByModality(modality: boolean): Observable<Risposta[]> {
     return this.http.post<any[]>(`${this.baseUrl}/answersbymodality`, modality).pipe(

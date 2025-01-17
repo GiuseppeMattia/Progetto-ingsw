@@ -66,8 +66,8 @@ export class RegisterComponent {
 
     // Invia i vari dati al backend
     this.api.registerUser(username, password).subscribe({
-      next: (response) => {
-        console.log('Registrazione effettuata con successo:', response);
+      next: () => {
+        //console.log('Registrazione effettuata con successo:', response); NOTA: Inserire response come parametro di next()
         alert("Registrazione avvenuta con successo!");
         this.router.navigate(["/login"]);
       },
@@ -75,7 +75,10 @@ export class RegisterComponent {
         if (error.status === 409) { // L'utente esiste già
           alert("Errore: Username già scelto");
           return;
+        } else if(error.status === 0){
+          alert('Il servizio non è al momento raggiungibile. Riprova più tardi');
         } else {
+          alert("C'è stato un errore nella registrazione")
           console.error('Errore sconosciuto: ', error.status);
         }
       }

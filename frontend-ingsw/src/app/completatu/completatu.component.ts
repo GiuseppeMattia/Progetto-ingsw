@@ -102,7 +102,7 @@ export class CompletatuComponent implements OnInit, OnDestroy{
       clearInterval(this.intervalId);
     }
   }
-
+/*
   debug(){
     for(let i: number = 0; i < this.numberOfQuestions; i++){
       console.log("Domanda " + i + ": " + this.questions[i].descrizione);
@@ -110,7 +110,7 @@ export class CompletatuComponent implements OnInit, OnDestroy{
       console.log("Risposta alla domanda " + i + " data dall'array di risposte corrette: " + this.correctAnswers[i].id)
     }
   }
-
+*/
   // Mostra la domanda corrente
   showQuestion(){
 

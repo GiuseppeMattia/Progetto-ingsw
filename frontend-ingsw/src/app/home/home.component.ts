@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {Router} from '@angular/router';
-import {HttpClient} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
 import {AuthService} from '../auth/auth.service';
 
@@ -19,7 +18,7 @@ export class HomeComponent {
     this.cookieService.delete("username");
     this.auth.setLogged(false);
     this.router.navigate(["/login"]);
-    console.log('Logout effettuato con successo');
+    //console.log('Logout effettuato con successo');
   }
 
   scegliTu(){

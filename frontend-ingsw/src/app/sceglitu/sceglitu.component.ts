@@ -6,7 +6,6 @@ import {Risposta} from '../models/risposta.model';
 import {forkJoin} from 'rxjs';
 import {FormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
-import {ResultsService} from '../service/results.service';
 import {CookieService} from 'ngx-cookie-service';
 
 
@@ -141,7 +140,7 @@ export class SceglituComponent implements OnInit, OnDestroy{
       clearInterval(this.intervalId);
     }
   }
-
+/*
   debug(){
     for(let i: number = 0; i < this.numberOfQuestions; i++){
       console.log("Domanda " + i + ": " + this.questions[i].descrizione);
@@ -149,7 +148,7 @@ export class SceglituComponent implements OnInit, OnDestroy{
       console.log("Risposta alla domanda " + i + " data dall'array di risposte corrette: " + this.correctAnswers[i].id)
     }
   }
-
+*/
   // Carica le risposte
   loadAnswers(){
     // Carica 4 risposte casuali
